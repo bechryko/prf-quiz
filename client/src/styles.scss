@@ -1,0 +1,13 @@
+@use './styles/material-override';
+@use './styles/tokens';
+
+html,
+body {
+   color-scheme: only dark;
+}
+
+body {
+   margin: 0;
+   font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+

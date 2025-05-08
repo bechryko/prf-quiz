@@ -1,0 +1,3 @@
+//@index('./*', (f, _) => `@forward '${f.name}';`)
+@forward 'colors';
+//@endindex

@@ -1,0 +1,24 @@
+<button
+   mat-flat-button
+   class="exit"
+   (click)="exit()">
+   Exit
+</button>
+<div class="quiz-details-container">
+   <h1>{{ selectedQuiz().name }}</h1>
+   <p class="description">{{ selectedQuiz().description }}</p>
+</div>
+@if (!started) {
+   <button
+      mat-flat-button
+      (click)="startQuiz()">
+      Start Quiz
+   </button>
+} @else {
+   @let questions = selectedQuiz().questions;
+   <prfq-quiz-question
+      [question]="questions[currentQuestionIndex]"
+      [questionNumber]="currentQuestionIndex + 1"
+      [totalQuestions]="questions.length"
+      (answered)="onQuestionAnswered($event)"></prfq-quiz-question>
+}

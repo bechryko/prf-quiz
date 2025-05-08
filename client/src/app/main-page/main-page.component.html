@@ -1,0 +1,15 @@
+<h1>Main page</h1>
+@if (isAdminUser()) {
+   <div class="game-creation-container">
+      <p>As your account has admin rights, you can create new games!</p>
+      <button
+         mat-flat-button
+         (click)="createNewGame()">
+         Create new game
+      </button>
+   </div>
+}
+<prfq-games-scroller
+   _title="All games"
+   [games]="allGames()"></prfq-games-scroller>
+

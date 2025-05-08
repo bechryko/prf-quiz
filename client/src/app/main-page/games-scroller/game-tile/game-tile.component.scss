@@ -1,0 +1,25 @@
+$background-color: var(--tertiary-container);
+
+:host {
+   display: grid;
+   position: relative;
+   grid-template-rows: auto 1fr auto;
+   background-color: $background-color;
+   border-radius: 1rem;
+   padding: 1rem;
+}
+
+h3 {
+   margin: 0;
+}
+
+.description {
+   text-align: justify;
+   overflow: hidden;
+}
+
+mat-icon {
+   position: absolute;
+   top: 1rem;
+   right: 1rem;
+}
