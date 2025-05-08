@@ -1,0 +1,47 @@
+<h1>
+   {{ selectedGame().name }}
+   <br />
+   <span class="subtitle">Game Overview</span>
+</h1>
+@if (isGameOwner()) {
+   <div class="quiz-creation-container">
+      <p>As your account has admin rights, and you are the owner of this game, you can create new quizzes here!</p>
+      <button
+         mat-flat-button
+         (click)="createNewQuiz()">
+         Create new quiz
+      </button>
+   </div>
+}
+<div class="leaderboard-container">
+   <h2>Leaderboard</h2>
+   <table>
+      <tr>
+         <th></th>
+         <th>Username</th>
+         <th>Score</th>
+      </tr>
+      @for (entry of leaderboard() | sortLeaderboardEntries; track $index) {
+         <tr [class.own]="username() === entry.username">
+            <td>{{ $index + 1 }}.</td>
+            <td>{{ entry.username }}</td>
+            <td>{{ entry.score }}</td>
+         </tr>
+      }
+   </table>
+</div>
+<div class="quizzes-container">
+   <h2>Quizzes</h2>
+   @for (quiz of selectedGame().quizzes; track $index) {
+      <div class="quiz-tile">
+         <h3>{{ quiz.name }}</h3>
+         <p class="description">{{ quiz.description }}</p>
+         <button
+            mat-flat-button
+            (click)="startQuiz($index)">
+            Take Quiz
+         </button>
+      </div>
+   }
+</div>
+

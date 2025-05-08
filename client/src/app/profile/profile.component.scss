@@ -1,0 +1,50 @@
+:host {
+   display: block;
+   background-color: var(--secondary-container);
+   width: 60%;
+   max-width: 40rem;
+   margin: 2rem auto;
+   border-radius: 2rem;
+   padding: 2rem;
+}
+
+prfq-register {
+   display: block;
+   margin-bottom: 5rem;
+}
+
+h2 {
+   font-size: 2rem;
+   text-align: center;
+}
+
+h3 {
+   margin-top: 3rem;
+}
+
+span.data {
+   font-style: italic;
+}
+
+ul {
+   li {
+      button {
+         height: fit-content;
+         margin-left: 1rem;
+      }
+   }
+}
+
+.admin-message {
+   color: var(--primary-text);
+}
+
+.actions-container {
+   display: flex;
+   gap: 1rem;
+   margin-top: 5rem;
+
+   button {
+      flex: 1;
+   }
+}

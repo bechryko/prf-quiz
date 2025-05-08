@@ -1,0 +1,16 @@
+<div class="question-details-container">
+   <h2>{{ question().title }} ({{ questionNumber() }} / {{ totalQuestions() }})</h2>
+   <p class="question">
+      {{ question().question }}
+      <span class="score-value">{{ question().scoreValue }} points</span>
+   </p>
+</div>
+<div class="options-container">
+   @for (option of question().options; track $index) {
+      <div
+         class="option"
+         (click)="answerQuestion(option.isCorrect)">
+         {{ option.text }}
+      </div>
+   }
+</div>

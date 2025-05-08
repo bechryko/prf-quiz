@@ -1,0 +1,34 @@
+<h2>Game creation</h2>
+<form
+   autocomplete="off"
+   [formGroup]="creationForm">
+   <mat-form-field>
+      <mat-label>Game name</mat-label>
+      <input
+         matInput
+         type="text"
+         formControlName="name" />
+   </mat-form-field>
+   <mat-form-field>
+      <mat-label>Game description</mat-label>
+      <input
+         matInput
+         type="text"
+         formControlName="description" />
+   </mat-form-field>
+   <div class="actions-container">
+      <button
+         mat-flat-button
+         type="submit"
+         [disabled]="submitted"
+         (click)="create()">
+         Create
+      </button>
+      <button
+         mat-stroked-button
+         [disabled]="submitted"
+         (click)="close()">
+         Cancel
+      </button>
+   </div>
+</form>

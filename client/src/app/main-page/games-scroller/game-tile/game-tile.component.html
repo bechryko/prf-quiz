@@ -1,0 +1,10 @@
+@if (user()?.id === game().ownerId) {
+   <mat-icon matTooltip="You are the owner of this game">settings</mat-icon>
+}
+<h3>{{ game().name }}</h3>
+<p class="description">{{ game().description }}</p>
+<button
+   mat-flat-button
+   (click)="navigateToGameOverview.emit()">
+   Game overview
+</button>

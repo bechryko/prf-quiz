@@ -1,0 +1,8 @@
+@mixin inline-view-timeline($name, $fill-mode: both, $inset: initial) {
+   view-timeline: --#{$name} inline;
+   view-timeline-inset: $inset;
+   animation-timeline: --#{$name};
+   animation-name: $name;
+   animation-fill-mode: $fill-mode;
+   animation-duration: 1ms;
+}

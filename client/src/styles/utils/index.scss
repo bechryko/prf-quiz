@@ -1,0 +1,4 @@
+//@index('./*', (f, _) => `@forward '${f.name}';`)
+@forward 'inline-scroll-snapping';
+@forward 'inline-view-timeline';
+//@endindex

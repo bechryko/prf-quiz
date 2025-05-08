@@ -1,0 +1,35 @@
+@use 'styles/utils';
+
+$element-width: 20rem;
+
+.scroller-wrapper {
+   display: grid;
+   gap: 3rem;
+   grid-auto-flow: column;
+   grid-auto-columns: $element-width;
+   overflow-x: auto;
+   padding: 2rem 50%;
+   @include utils.inline-scroll-snapping(center);
+
+   prfq-game-tile {
+      height: 10rem;
+      @include utils.inline-view-timeline(element-enlargement, $inset: calc((100% - $element-width * 1.5) / 2));
+   }
+}
+
+@keyframes element-enlargement {
+   $enlargement: 1.2;
+
+   0% {
+      transform: scale(1);
+   }
+
+   50% {
+      transform: scale($enlargement);
+   }
+
+   100% {
+      transform: scale(1);
+   }
+}
+

@@ -1,0 +1,8 @@
+@mixin inline-scroll-snapping($align) {
+   overscroll-behavior-inline: contain;
+   scroll-snap-type: inline mandatory;
+
+   > :not(.no-snap) {
+      scroll-snap-align: $align;
+   }
+}

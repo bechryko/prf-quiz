@@ -1,0 +1,9 @@
+<h2>{{ _title() }}</h2>
+<div class="scroller-wrapper">
+   @for (game of games(); track $index) {
+      <prfq-game-tile
+         [game]="game"
+         (navigateToGameOverview)="navigateToGameOverview(game.id)"></prfq-game-tile>
+   }
+</div>
+

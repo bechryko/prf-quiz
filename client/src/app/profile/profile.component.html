@@ -1,0 +1,41 @@
+@let loggedInUser = user();
+@if (!loggedInUser) {
+   <prfq-register></prfq-register>
+   <prfq-login></prfq-login>
+} @else {
+   <h2>Profile</h2>
+   <p>
+      Username:
+      <span class="data">{{ loggedInUser.name }}</span>
+   </p>
+   @if (loggedInUser.isAdmin) {
+      <p class="admin-message">This is an admin profile! You have access to every game and quiz!</p>
+   }
+   <h3>Participated games</h3>
+   <ul>
+      @for (game of participatedGames(); track $index) {
+         <li>
+            {{ game.name }}
+            <button
+               mat-stroked-button
+               (click)="toGame(game.id)">
+               View
+            </button>
+         </li>
+      } @empty {
+         <p class="error">No participated games... yet</p>
+      }
+   </ul>
+}
+<div class="actions-container">
+   <button
+      mat-flat-button
+      (click)="logout()">
+      Log out
+   </button>
+   <button
+      mat-flat-button
+      (click)="toMainPage()">
+      Go to main page
+   </button>
+</div>

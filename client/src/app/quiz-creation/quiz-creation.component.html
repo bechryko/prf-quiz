@@ -1,0 +1,90 @@
+<h1>Create a quiz</h1>
+<form
+   autocomplete="off"
+   [formGroup]="quizForm">
+   <fieldset class="main-field-set">
+      <h2>About the quiz</h2>
+      <mat-form-field>
+         <mat-label>Name</mat-label>
+         <input
+            matInput
+            type="text"
+            formControlName="name" />
+      </mat-form-field>
+      <mat-form-field>
+         <mat-label>Description</mat-label>
+         <input
+            matInput
+            type="text"
+            formControlName="description" />
+      </mat-form-field>
+   </fieldset>
+   <button
+      mat-flat-button
+      (click)="addQuestion()">
+      Add question
+   </button>
+   <div
+      class="questions-container"
+      formArrayName="questions">
+      @for (question of quizForm.controls.questions.controls; track $index) {
+         <fieldset
+            class="question-field-set"
+            [formGroupName]="$index">
+            <h2>{{ question.value.title || '...' }}</h2>
+            <div class="general-fields-container">
+               <h3>General</h3>
+               <mat-form-field>
+                  <mat-label>Question title</mat-label>
+                  <input
+                     matInput
+                     type="text"
+                     formControlName="title" />
+               </mat-form-field>
+               <mat-form-field>
+                  <mat-label>Question</mat-label>
+                  <input
+                     matInput
+                     type="text"
+                     formControlName="question" />
+               </mat-form-field>
+               <mat-form-field>
+                  <mat-label>Value (score)</mat-label>
+                  <input
+                     matInput
+                     type="number"
+                     formControlName="scoreValue" />
+               </mat-form-field>
+            </div>
+            <div class="option-fields-container">
+               <h3>Options</h3>
+               <div
+                  #optionsContainer
+                  class="question-options-container"
+                  formArrayName="options">
+                  @for (option of question.controls.options.controls; track $index) {
+                     <mat-form-field [formControlName]="$index">
+                        <mat-label>Option {{ $index + 1 }}</mat-label>
+                        <input
+                           matInput
+                           type="text"
+                           formControlName="text" />
+                     </mat-form-field>
+                  }
+               </div>
+               <button
+                  mat-flat-button
+                  (click)="addOption($index)">
+                  Add option
+               </button>
+            </div>
+         </fieldset>
+      }
+   </div>
+   <button
+      mat-flat-button
+      [disabled]="submitted"
+      (click)="createQuiz()">
+      Finish
+   </button>
+</form>

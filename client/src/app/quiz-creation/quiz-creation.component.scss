@@ -1,0 +1,77 @@
+$spacing: 1rem;
+
+:host {
+   display: block;
+   margin: 2rem auto;
+   width: 66%;
+   background-color: var(--secondary-container);
+   padding: 2rem;
+   border-radius: 2rem;
+
+   fieldset {
+      border: 2px solid var(--secondary);
+      padding: $spacing;
+
+      h2 {
+         margin-top: 0;
+      }
+   }
+}
+
+h1 {
+   text-align: center;
+   font-size: 2.5rem;
+   color: var(--primary-text);
+}
+
+form {
+   display: grid;
+   gap: $spacing;
+}
+
+fieldset.main-field-set {
+   mat-form-field {
+      margin-right: $spacing;
+   }
+}
+
+.questions-container {
+   display: grid;
+   gap: $spacing;
+
+   fieldset {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto 1fr;
+      gap: $spacing;
+
+      h2 {
+         text-align: center;
+         grid-column: span 2;
+         margin: 0;
+         height: 1.8125rem;
+      }
+
+      h3 {
+         text-align: center;
+      }
+
+      .general-fields-container {
+         display: grid;
+         align-content: start;
+         gap: $spacing;
+      }
+
+      .option-fields-container {
+         display: grid;
+         align-content: start;
+         gap: $spacing;
+      }
+
+      .question-options-container {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+         gap: $spacing;
+      }
+   }
+}
