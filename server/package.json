@@ -1,0 +1,38 @@
+{
+  "name": "prf-quiz-backend",
+  "version": "0.0.0",
+  "main": "main.ts",
+  "scripts": {
+    "build": "cd node_modules/typescript/bin && tsc -p ../../..",
+    "start": "node build/main.js",
+    "prestart": "npm run build",
+    "docker-build": "docker build -t prfq_mongo_image .",
+    "docker-start": "docker run -it -p 6000:27017 --name prfq_mongo_container -d prfq_mongo_image",
+    "docker": "npm run docker-build && npm run docker-start"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.14.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/express-session": "^1.18.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
+    "typescript": "^5.8.3"
+  }
+}

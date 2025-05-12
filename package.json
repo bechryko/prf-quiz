@@ -1,0 +1,14 @@
+{
+  "name": "prf-quiz",
+  "version": "0.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "install": "cd client && npm i && cd ../server && npm i",
+    "start-frontend": "cd client && npm run start",
+    "start-backend": "cd server && npm run start"
+  },
+  "author": "",
+  "license": "ISC"
+}
+

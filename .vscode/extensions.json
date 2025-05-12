@@ -7,6 +7,9 @@
     "jayfong.generate-index",
     "sainoba.px-to-rem",
     "gruntfuggly.todo-tree",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "pkief.material-icon-theme",
+    "oderwat.indent-rainbow"
   ]
 }
+
