@@ -1,0 +1,13 @@
+mat-snack-bar-container {
+   --mdc-snackbar-container-color: var(--primary-container);
+   --mdc-snackbar-supporting-text-color: white;
+   --mdc-snackbar-supporting-text-size: 1.25rem;
+   --mdc-snackbar-supporting-text-line-height: 1.5;
+
+   --mat-snack-bar-button-color: var(--primary-text);
+   --mdc-text-button-label-text-size: 1.5rem;
+
+   simple-snack-bar {
+      gap: 2rem;
+   }
+}

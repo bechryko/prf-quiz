@@ -2,6 +2,10 @@
 
 $element-width: 20rem;
 
+h2 {
+   margin-bottom: 0.5rem;
+}
+
 .scroller-wrapper {
    display: grid;
    gap: 3rem;
@@ -14,6 +18,12 @@ $element-width: 20rem;
    prfq-game-tile {
       height: 10rem;
       @include utils.inline-view-timeline(element-enlargement, $inset: calc((100% - $element-width * 1.5) / 2));
+   }
+
+   &:has(> .no-games) {
+      overflow-x: hidden;
+      grid-template-columns: fit-content;
+      place-items: center;
    }
 }
 
@@ -31,5 +41,9 @@ $element-width: 20rem;
    100% {
       transform: scale(1);
    }
+}
+
+.no-games {
+   font-style: italic;
 }
 

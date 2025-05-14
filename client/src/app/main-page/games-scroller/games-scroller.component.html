@@ -4,6 +4,8 @@
       <prfq-game-tile
          [game]="game"
          (navigateToGameOverview)="navigateToGameOverview(game.id)"></prfq-game-tile>
+   } @empty {
+      <p class="no-games">No games to display here...</p>
    }
 </div>
 

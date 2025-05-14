@@ -63,12 +63,18 @@
                   class="question-options-container"
                   formArrayName="options">
                   @for (option of question.controls.options.controls; track $index) {
-                     <mat-form-field [formControlName]="$index">
+                     <mat-form-field
+                        class="option-form-field"
+                        [formGroupName]="$index">
                         <mat-label>Option {{ $index + 1 }}</mat-label>
                         <input
                            matInput
                            type="text"
                            formControlName="text" />
+                        <mat-checkbox
+                           class="correct-checkbox"
+                           formControlName="isCorrect"
+                           (click)="$event.stopPropagation()"></mat-checkbox>
                      </mat-form-field>
                   }
                </div>
@@ -88,3 +94,4 @@
       Finish
    </button>
 </form>
+

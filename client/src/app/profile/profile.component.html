@@ -9,7 +9,7 @@
       <span class="data">{{ loggedInUser.name }}</span>
    </p>
    @if (loggedInUser.isAdmin) {
-      <p class="admin-message">This is an admin profile! You have access to every game and quiz!</p>
+      <p class="admin-message">This is an admin profile! You can create new games, and modify your existing ones!</p>
    }
    <h3>Participated games</h3>
    <ul>
@@ -28,14 +28,17 @@
    </ul>
 }
 <div class="actions-container">
-   <button
-      mat-flat-button
-      (click)="logout()">
-      Log out
-   </button>
+   @if (loggedInUser) {
+      <button
+         mat-flat-button
+         (click)="logout()">
+         Log out
+      </button>
+   }
    <button
       mat-flat-button
       (click)="toMainPage()">
       Go to main page
    </button>
 </div>
+

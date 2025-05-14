@@ -21,6 +21,8 @@ export class MainPageComponent {
    private readonly user = toSignal(this.authService.loggedInUser$, { initialValue: null });
    public readonly isAdminUser = computed(() => Boolean(this.user()?.isAdmin));
    public readonly allGames = toSignal(this.gameService.games$, { initialValue: [] });
+   public readonly mostPopularGames = toSignal(this.gameService.mostPopularGames$, { initialValue: [] });
+   public readonly gamesWithoutPlaying = toSignal(this.gameService.gamesWithoutPlaying$, { initialValue: [] });
 
    public createNewGame(): void {
       this.dialog.open<string>(GameCreationDialogComponent).closed.subscribe(newGameId => {
@@ -32,3 +34,4 @@ export class MainPageComponent {
       });
    }
 }
+

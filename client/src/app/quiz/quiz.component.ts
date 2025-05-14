@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Game, Quiz, QuizQuestion } from '@prfq-shared/models';
 import { GameService, RouterService } from '@prfq-shared/services';
 import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
@@ -14,6 +15,7 @@ import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
 export class QuizComponent {
    private readonly routerService = inject(RouterService);
    private readonly gameService = inject(GameService);
+   private readonly snackbar = inject(MatSnackBar);
 
    public readonly selectedQuiz = input.required<Quiz>();
    public readonly selectedGame = input.required<Game>();
@@ -43,13 +45,14 @@ export class QuizComponent {
    }
 
    public onQuizCompleted(): void {
-      const quizIndex = this.selectedGame().quizzes.indexOf(this.selectedQuiz());
-      if (quizIndex === -1) {
-         throw new Error('Quiz not found!');
-      }
-
-      this.gameService.saveQuizScore(this.selectedGame().id, quizIndex, this.score);
-      this.exit();
+      this.gameService.saveQuizScore(this.selectedQuiz().id, this.score).subscribe(() => {
+         this.snackbar.open(
+            `Congratulations for completing the quiz ${this.selectedQuiz().name}! Your score was ${this.score} / ${this.maxScore}.`,
+            this.score < this.maxScore ? 'Okay...' : 'Yay!',
+            { duration: 3000 }
+         );
+         this.exit();
+      });
    }
 
    public exit(): void {
@@ -59,4 +62,9 @@ export class QuizComponent {
    private get currentQuestion(): QuizQuestion {
       return this.selectedQuiz().questions[this.currentQuestionIndex];
    }
+
+   private get maxScore(): number {
+      return this.selectedQuiz().questions.reduce((score, question) => score + question.scoreValue, 0);
+   }
 }
+

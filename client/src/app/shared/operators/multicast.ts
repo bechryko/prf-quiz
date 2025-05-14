@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, ReplaySubject, ShareConfig, share } from "rxjs";
+import { MonoTypeOperatorFunction, ReplaySubject, ShareConfig, share } from 'rxjs';
 
 export function multicast<T>(options: ShareConfig<T> = {}): MonoTypeOperatorFunction<T> {
    return share({
@@ -8,3 +8,4 @@ export function multicast<T>(options: ShareConfig<T> = {}): MonoTypeOperatorFunc
       resetOnRefCountZero: options.resetOnRefCountZero ?? true
    });
 }
+

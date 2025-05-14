@@ -34,7 +34,7 @@ export class QuizFormsUtils {
             scoreValue: number | null;
          }>[];
       }>
-   ): Quiz {
+   ): Omit<Quiz, 'id' | 'leaderboard'> {
       return {
          name: formValue.name ?? '',
          description: formValue.description ?? '',
@@ -46,8 +46,8 @@ export class QuizFormsUtils {
                isCorrect: Boolean(optionValue.isCorrect)
             })),
             scoreValue: questionValue.scoreValue ?? 1
-         })),
-         leaderboard: []
+         }))
       };
    }
 }
+

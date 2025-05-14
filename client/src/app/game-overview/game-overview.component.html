@@ -1,47 +1,75 @@
-<h1>
-   {{ selectedGame().name }}
-   <br />
-   <span class="subtitle">Game Overview</span>
-</h1>
-@if (isGameOwner()) {
-   <div class="quiz-creation-container">
-      <p>As your account has admin rights, and you are the owner of this game, you can create new quizzes here!</p>
-      <button
-         mat-flat-button
-         (click)="createNewQuiz()">
-         Create new quiz
-      </button>
-   </div>
-}
-<div class="leaderboard-container">
-   <h2>Leaderboard</h2>
-   <table>
-      <tr>
-         <th></th>
-         <th>Username</th>
-         <th>Score</th>
-      </tr>
-      @for (entry of leaderboard() | sortLeaderboardEntries; track $index) {
-         <tr [class.own]="username() === entry.username">
-            <td>{{ $index + 1 }}.</td>
-            <td>{{ entry.username }}</td>
-            <td>{{ entry.score }}</td>
-         </tr>
-      }
-   </table>
-</div>
-<div class="quizzes-container">
-   <h2>Quizzes</h2>
-   @for (quiz of selectedGame().quizzes; track $index) {
-      <div class="quiz-tile">
-         <h3>{{ quiz.name }}</h3>
-         <p class="description">{{ quiz.description }}</p>
+@let currentGame = game();
+@if (currentGame) {
+   <h1>
+      {{ currentGame.name }}
+      <br />
+      <span class="subtitle">Game Overview</span>
+   </h1>
+   @if (isGameOwner()) {
+      <div class="quiz-creation-container">
+         <p>As your account has admin rights, and you are the owner of this game, you can create new quizzes here!</p>
          <button
             mat-flat-button
-            (click)="startQuiz($index)">
-            Take Quiz
+            (click)="createNewQuiz()">
+            Create new quiz
          </button>
       </div>
    }
-</div>
+   <div class="leaderboard-container">
+      <h2>Leaderboard</h2>
+      <table>
+         <tr>
+            <th></th>
+            <th>Username</th>
+            <th>Score</th>
+         </tr>
+         @for (entry of leaderboard() | sortLeaderboardEntries; track $index) {
+            <tr [class.own]="username() === entry.username">
+               <td>{{ $index + 1 }}.</td>
+               <td>{{ entry.username }}</td>
+               <td>{{ entry.score }}</td>
+            </tr>
+         } @empty {
+            <tr>
+               <td colspan="3">
+                  <p class="no-entries">No one on the leaderboard yet...</p>
+               </td>
+            </tr>
+         }
+      </table>
+   </div>
+   @if (!user()) {
+      <div class="logged-out-notice-container">
+         <p>
+            WARNING! You are not logged in! You can still do quizzes, but your score will not be saved until you log in!
+         </p>
+      </div>
+   }
+   <div class="quizzes-container">
+      <h2>Quizzes</h2>
+      @for (quiz of currentGame.quizzes; track $index) {
+         <div class="quiz-tile">
+            @if (isGameOwner()) {
+               <button
+                  class="quiz-delete"
+                  mat-icon-button
+                  matTooltip="Delete"
+                  (click)="deleteQuiz(quiz)">
+                  <mat-icon>delete</mat-icon>
+               </button>
+            }
+            <h3>{{ quiz.name }}</h3>
+            <p class="description">{{ quiz.description }}</p>
+            <button
+               class="start"
+               mat-flat-button
+               (click)="startQuiz($index)">
+               Take Quiz
+            </button>
+         </div>
+      } @empty {
+         <p class="no-quiz">No quizzes added to the game yet</p>
+      }
+   </div>
+}
 

@@ -11,3 +11,8 @@ body {
    font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+::selection {
+   color: color-mix(in oklab, white, var(--primary-text));
+   background-color: color-mix(in oklab, black, var(--primary-container) 60%);
+}
+

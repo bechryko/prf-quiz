@@ -2,8 +2,7 @@ import { Routes } from '@angular/router';
 import { isGameSelectedGuard } from '@prfq-guards/game-overview';
 import { isQuizSelectedGuard } from '@prfq-guards/quiz';
 import { canCreateQuizGuard } from '@prfq-guards/quiz-creation';
-import { selectedGameResolver } from '@prfq-resolvers/game-overview';
-import { selectedQuizResolver } from '@prfq-resolvers/quiz';
+import { selectedGameResolver, selectedQuizResolver } from '@prfq-resolvers/quiz';
 import { Path } from './shared/models';
 
 export const routes: Routes = [
@@ -14,10 +13,7 @@ export const routes: Routes = [
    {
       path: `${Path.GAME_OVERVIEW}/:gameId`,
       loadComponent: () => import('./game-overview/game-overview.component').then(c => c.GameOverviewComponent),
-      canActivate: [isGameSelectedGuard],
-      resolve: {
-         selectedGame: selectedGameResolver
-      }
+      canActivate: [isGameSelectedGuard]
    },
    {
       path: `${Path.QUIZ}/:gameId/:quizIdx`,
@@ -42,3 +38,4 @@ export const routes: Routes = [
       redirectTo: Path.MAIN
    }
 ];
+
