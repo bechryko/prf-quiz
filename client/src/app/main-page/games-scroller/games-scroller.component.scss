@@ -2,8 +2,32 @@
 
 $element-width: 20rem;
 
-h2 {
-   margin-bottom: 0.5rem;
+:host {
+   display: block;
+   margin-top: 2rem;
+}
+
+.scroller-header {
+   display: flex;
+   align-items: center;
+   padding-block: 1rem;
+
+   h2 {
+      margin-block: 0;
+   }
+
+   input[type='search'] {
+      font-size: 1.25rem;
+      padding: 0.5rem;
+      margin-left: auto;
+      border: none;
+      border-radius: 0.25rem;
+      caret-color: var(--primary-text);
+
+      &:focus-visible {
+         outline: 2px solid var(--primary-container);
+      }
+   }
 }
 
 .scroller-wrapper {
@@ -12,6 +36,7 @@ h2 {
    grid-auto-flow: column;
    grid-auto-columns: $element-width;
    overflow-x: auto;
+   min-height: 13rem;
    padding: 2rem 50%;
    @include utils.inline-scroll-snapping(center);
 
@@ -46,4 +71,3 @@ h2 {
 .no-games {
    font-style: italic;
 }
-

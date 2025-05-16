@@ -21,12 +21,9 @@ export class GameService {
    public readonly games$: Observable<Game[]>;
    private readonly updateGames$ = new Subject<undefined | Callback>();
    private readonly gamesSignal: Signal<Game[]>;
-   public readonly mostPopularGames$: Observable<Game[]>;
-   public readonly gamesWithoutPlaying$: Observable<Game[]>;
 
    constructor() {
       this.games$ = this.updateGames$.pipe(
-         tap(() => console.log('updateGames')),
          startWith(undefined),
          switchMap(postCallback => {
             return this.getAllGames().pipe(
@@ -37,22 +34,10 @@ export class GameService {
                })
             );
          }),
-         tap(console.log),
          multicast({ resetOnRefCountZero: false })
       );
 
       this.gamesSignal = toSignal(this.games$, { initialValue: [] });
-
-      this.mostPopularGames$ = this.games$.pipe(
-         map(games => {
-            const sortedGames = [...games].sort(GameUtils.compareGamesForSortingByPopularity.bind(GameUtils));
-            return sortedGames.slice(0, 3);
-         })
-      );
-
-      this.gamesWithoutPlaying$ = this.games$.pipe(
-         map(games => games.filter(GameUtils.filterGamesByNoPlaying.bind(GameUtils)))
-      );
    }
 
    public createGame(name: string, description: string): Observable<string> {

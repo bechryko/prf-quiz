@@ -11,11 +11,17 @@
 }
 <prfq-games-scroller
    _title="All games"
+   [search]="true"
    [games]="allGames()"></prfq-games-scroller>
+@if (isAdminUser()) {
+   <prfq-games-scroller
+      _title="Your games"
+      [search]="true"
+      [games]="ownGames()"></prfq-games-scroller>
+}
 <prfq-games-scroller
    _title="Most popular games"
    [games]="mostPopularGames()"></prfq-games-scroller>
 <prfq-games-scroller
    _title="New games"
-   [games]="gamesWithoutPlaying()"></prfq-games-scroller>
-
+   [games]="newGames()"></prfq-games-scroller>

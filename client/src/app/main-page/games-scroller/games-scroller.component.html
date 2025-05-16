@@ -1,11 +1,23 @@
-<h2>{{ _title() }}</h2>
+<div class="scroller-header">
+   <h2>{{ _title() }}</h2>
+   @if (search()) {
+      <input
+         #searchbar
+         type="search"
+         placeholder="Search..."
+         (input)="updateSearchQuery(searchbar.value)" />
+   }
+</div>
 <div class="scroller-wrapper">
-   @for (game of games(); track $index) {
+   @for (game of matchingGames(); track $index) {
       <prfq-game-tile
          [game]="game"
          (navigateToGameOverview)="navigateToGameOverview(game.id)"></prfq-game-tile>
    } @empty {
-      <p class="no-games">No games to display here...</p>
+      @if (isSearching()) {
+         <p class="no-games">No games match your search...</p>
+      } @else {
+         <p class="no-games">No games to display here...</p>
+      }
    }
 </div>
-

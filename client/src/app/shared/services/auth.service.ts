@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { effect, inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable, Signal, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '@prfq-shared/models';
 import { HttpRequestUtils } from '@prfq-shared/utils';
@@ -15,12 +15,10 @@ export class AuthService {
    private readonly loggedInUser = signal<User | null>(null);
 
    constructor() {
-      effect(() => console.log('loggedInUser', this.loggedInUser()));
-
       this.getCurrentUser();
    }
 
-   public login(username: string, password: string): void {
+   public login(username: string, password: string, welcome = true): void {
       this.http
          .post<User>(HttpRequestUtils.getUrl('login'), HttpRequestUtils.createBody({ username, password }), {
             headers: HttpRequestUtils.getHeaders(),
@@ -28,7 +26,9 @@ export class AuthService {
          })
          .pipe(
             tap(user => {
-               this.snackbar.open(`Welcome, ${user.username}!`, undefined, { duration: 2000 });
+               if (welcome) {
+                  this.snackbar.open(`Welcome, ${user.username}!`, undefined, { duration: 2000 });
+               }
             }),
             this.catchAuthError()
          )
@@ -48,8 +48,8 @@ export class AuthService {
             }),
             this.catchAuthError()
          )
-         .subscribe(user => {
-            this.loggedInUser.set(user);
+         .subscribe(() => {
+            this.login(username, password, false);
          });
    }
 
@@ -91,7 +91,6 @@ export class AuthService {
 
    private catchAuthError<T>(): OperatorFunction<T, T | null> {
       return catchError(({ error }) => {
-         console.log(error);
          this.snackbar.open(error, 'Dismiss', { duration: 3500 });
          return [null];
       });
