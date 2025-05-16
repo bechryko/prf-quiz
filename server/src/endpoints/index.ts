@@ -14,6 +14,7 @@ export function configureEndpoints(passport: PassportStatic, router: Router): Ro
    router.post('/login', authService.login.bind(authService));
    router.post('/register', authService.register.bind(authService));
    router.post('/logout', authService.logout.bind(authService));
+   router.get('/auth', authService.auth.bind(authService));
 
    router.post('/quiz/create', quizService.createQuiz.bind(quizService));
    router.delete('/quiz/delete/:quizId', quizService.deleteQuiz.bind(quizService));
@@ -25,4 +26,3 @@ export function configureEndpoints(passport: PassportStatic, router: Router): Ro
 
    return router;
 }
-

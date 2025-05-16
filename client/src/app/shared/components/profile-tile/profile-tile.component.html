@@ -1,6 +1,6 @@
 @let loggedInUser = user();
 @if (loggedInUser) {
-   <p class="user-name">{{ loggedInUser.name }}</p>
+   <p class="user-name">{{ loggedInUser.username }}</p>
    @if (loggedInUser.isAdmin) {
       <mat-icon matTooltip="Admin user">admin_panel_settings</mat-icon>
    } @else {

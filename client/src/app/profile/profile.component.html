@@ -6,7 +6,7 @@
    <h2>Profile</h2>
    <p>
       Username:
-      <span class="data">{{ loggedInUser.name }}</span>
+      <span class="data">{{ loggedInUser.username }}</span>
    </p>
    @if (loggedInUser.isAdmin) {
       <p class="admin-message">This is an admin profile! You can create new games, and modify your existing ones!</p>
@@ -41,4 +41,3 @@
       Go to main page
    </button>
 </div>
-

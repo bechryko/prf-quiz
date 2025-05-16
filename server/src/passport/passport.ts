@@ -19,13 +19,13 @@ export function configurePassport(passport: PassportStatic): PassportStatic {
          console.log('passport.use');
          User.findOne({ username })
             .then(user => {
-               console.log(user);
+               console.log('user', user);
                if (user) {
                   user.comparePassword(password, (error, _) => {
                      if (error) {
                         done('Incorrect username or password.');
                      } else {
-                        done(null, user._id as any);
+                        done(null, user);
                      }
                   });
                } else {
@@ -41,4 +41,3 @@ export function configurePassport(passport: PassportStatic): PassportStatic {
 
    return passport;
 }
-

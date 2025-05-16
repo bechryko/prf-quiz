@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { Quiz } from '@prfq-shared/models';
+import { Path, Quiz } from '@prfq-shared/models';
 import { SortLeaderboardEntriesPipe } from '@prfq-shared/pipes';
 import { AuthService, GameService, RouterService } from '@prfq-shared/services';
 import { GameUtils } from '@prfq-shared/utils';
@@ -27,8 +27,8 @@ export class GameOverviewComponent {
       initialValue: null
    });
    public readonly leaderboard = computed(() => GameUtils.getComputedLeaderboardEntries(this.game()!));
-   public readonly user = toSignal(this.authService.loggedInUser$, { initialValue: null });
-   public readonly username = computed(() => this.user()?.name ?? '');
+   public readonly user = this.authService.user;
+   public readonly username = computed(() => this.user()?.username ?? '');
    public readonly isGameOwner = computed(() => {
       const user = this.user();
       const game = this.game();
@@ -54,8 +54,11 @@ export class GameOverviewComponent {
       this.routerService.startQuiz(this.gameId, index);
    }
 
+   public backToMenu(): void {
+      this.routerService.navigate(Path.MAIN);
+   }
+
    private get gameId(): string {
       return this.route.snapshot.paramMap.get('gameId')!;
    }
 }
-

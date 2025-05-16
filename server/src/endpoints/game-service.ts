@@ -25,7 +25,18 @@ export class GameService {
    }
 
    public createGame(req: Request, res: Response): void {
-      const { name, ownerId, description } = req.body;
+      const user = req.user as any;
+      if (!user) {
+         res.status(500).send('User not logged in.');
+         return;
+      }
+      if (!user.isAdmin) {
+         res.status(500).send('Only admin users can create games.');
+         return;
+      }
+
+      const { name, description } = req.body;
+      const ownerId = user._id.toString();
       const game = new Game({ name, ownerId, description });
       console.log(game);
       game

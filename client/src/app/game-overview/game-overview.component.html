@@ -1,4 +1,10 @@
 @let currentGame = game();
+<button
+   mat-stroked-button
+   class="back"
+   (click)="backToMenu()">
+   Back to main menu
+</button>
 @if (currentGame) {
    <h1>
       {{ currentGame.name }}
@@ -72,4 +78,3 @@
       }
    </div>
 }
-

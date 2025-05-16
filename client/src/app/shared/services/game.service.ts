@@ -1,23 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GameUtils, HttpRequestUtils } from '@prfq-shared/utils';
-import {
-   catchError,
-   exhaustMap,
-   iif,
-   map,
-   Observable,
-   of,
-   startWith,
-   Subject,
-   switchMap,
-   take,
-   tap,
-   throwError
-} from 'rxjs';
+import { catchError, map, Observable, startWith, Subject, switchMap, tap } from 'rxjs';
 import { Game, Quiz } from '../models';
 import { mapVoid, multicast } from '../operators';
 import { AuthService } from './auth.service';
+import { RouterService } from './router.service';
+
+type Callback = () => void;
 
 @Injectable({
    providedIn: 'root'
@@ -25,20 +16,32 @@ import { AuthService } from './auth.service';
 export class GameService {
    private readonly authService = inject(AuthService);
    private readonly http = inject(HttpClient);
+   private readonly routerService = inject(RouterService);
 
    public readonly games$: Observable<Game[]>;
-   private readonly updateGames$ = new Subject<void>();
+   private readonly updateGames$ = new Subject<undefined | Callback>();
+   private readonly gamesSignal: Signal<Game[]>;
    public readonly mostPopularGames$: Observable<Game[]>;
    public readonly gamesWithoutPlaying$: Observable<Game[]>;
 
    constructor() {
       this.games$ = this.updateGames$.pipe(
          tap(() => console.log('updateGames')),
-         startWith(null),
-         switchMap(() => this.getAllGames()),
+         startWith(undefined),
+         switchMap(postCallback => {
+            return this.getAllGames().pipe(
+               tap(() => {
+                  if (postCallback) {
+                     postCallback();
+                  }
+               })
+            );
+         }),
          tap(console.log),
          multicast({ resetOnRefCountZero: false })
       );
+
+      this.gamesSignal = toSignal(this.games$, { initialValue: [] });
 
       this.mostPopularGames$ = this.games$.pipe(
          map(games => {
@@ -53,28 +56,22 @@ export class GameService {
    }
 
    public createGame(name: string, description: string): Observable<string> {
-      return this.authService.loggedInUser$.pipe(
-         take(1),
-         exhaustMap(user =>
-            iif(
-               () => user !== null,
-               this.http.post(
-                  HttpRequestUtils.getUrl('game/create'),
-                  HttpRequestUtils.createBody({ name, description, ownerId: user!.id }),
-                  { headers: HttpRequestUtils.getHeaders() }
-               ),
-               throwError(() => new Error('User not logged in!'))
-            )
-         ),
-         tap(() => this.fetchGames()),
-         map((response: any) => response._id)
-      );
+      return this.http
+         .post(HttpRequestUtils.getUrl('game/create'), HttpRequestUtils.createBody({ name, description }), {
+            headers: HttpRequestUtils.getHeaders(),
+            withCredentials: true
+         })
+         .pipe(
+            map((response: any) => response._id),
+            tap(gameId => this.fetchGames(() => this.routerService.openGameOverview(gameId)))
+         );
    }
 
    public createQuiz(gameId: string, quiz: Omit<Quiz, 'id' | 'leaderboard'>): Observable<void> {
       return this.http
          .post(HttpRequestUtils.getUrl('quiz/create'), HttpRequestUtils.createBody({ ...quiz, gameId }), {
-            headers: HttpRequestUtils.getHeaders()
+            headers: HttpRequestUtils.getHeaders(),
+            withCredentials: true
          })
          .pipe(
             mapVoid(),
@@ -85,7 +82,8 @@ export class GameService {
    public deleteQuiz(quizId: string): Observable<number> {
       return this.http
          .delete<number>(HttpRequestUtils.getUrl(`quiz/delete/${quizId}`), {
-            headers: HttpRequestUtils.getHeaders()
+            headers: HttpRequestUtils.getHeaders(),
+            withCredentials: true
          })
          .pipe(tap(() => this.fetchGames()));
    }
@@ -107,53 +105,36 @@ export class GameService {
    }
 
    public saveQuizScore(quizId: string, score: number): Observable<void> {
-      return this.authService.loggedInUser$.pipe(
-         take(1),
-         switchMap(user => {
-            if (!user) {
-               return of(false);
-            }
-
-            return this.http
-               .post<{
-                  score: number;
-               }>(
-                  HttpRequestUtils.getUrl('quiz/leaderboard'),
-                  HttpRequestUtils.createBody({ username: user.name, quizId, score }),
-                  { headers: HttpRequestUtils.getHeaders() }
-               )
-               .pipe(map(() => true));
-         }),
-         tap(isSuccessful => {
-            if (isSuccessful) {
-               this.fetchGames();
-            }
-         }),
-         mapVoid()
-      );
+      return this.http
+         .post<{
+            score: number;
+         }>(HttpRequestUtils.getUrl('quiz/leaderboard'), HttpRequestUtils.createBody({ quizId, score }), {
+            headers: HttpRequestUtils.getHeaders(),
+            withCredentials: true
+         })
+         .pipe(
+            tap(() => this.fetchGames()),
+            mapVoid()
+         );
    }
 
-   public getParticipatedGames(): Observable<Game[]> {
-      return this.games$.pipe(
-         switchMap(games =>
-            this.authService.loggedInUser$.pipe(
-               map(user => {
-                  if (!user) {
-                     return [];
-                  }
+   public getParticipatedGames(): Signal<Game[]> {
+      return computed(() => {
+         const user = this.authService.user();
+         const games = this.gamesSignal();
 
-                  return games.filter(game =>
-                     GameUtils.getComputedLeaderboardEntries(game).find(entry => entry.username === user.name)
-                  );
-               })
-            )
-         ),
-         multicast()
-      );
+         if (!user || games.length === 0) {
+            return [];
+         }
+
+         return games.filter(game =>
+            GameUtils.getComputedLeaderboardEntries(game).find(entry => entry.username === user.username)
+         );
+      });
    }
 
-   private fetchGames(): void {
-      this.updateGames$.next();
+   private fetchGames(postCallback?: Callback): void {
+      this.updateGames$.next(postCallback);
    }
 
    private getAllGames(): Observable<Game[]> {
@@ -163,65 +144,4 @@ export class GameService {
          })
          .pipe(catchError(() => [[]]));
    }
-
-   private getMockGame(): Game {
-      return {
-         name: 'World of Animals',
-         id: '0123456789',
-         ownerId: '123',
-         description: 'Do you know the world of animals enough?',
-         quizzes: [
-            {
-               id: '1',
-               name: 'General animal quiz',
-               description:
-                  'Some questions about animals general. Find out if you know the surface of this vast world!',
-               questions: [
-                  {
-                     title: 'River horse',
-                     question: "Which animal's name means river horse?",
-                     options: [
-                        { text: 'Camel' },
-                        { text: 'Hippopotamus', isCorrect: true },
-                        { text: 'Giraffe' },
-                        { text: 'Whale' }
-                     ],
-                     scoreValue: 1
-                  },
-                  {
-                     title: 'Manx cat',
-                     question: 'What is the distinguishing feature of a manx cat? ',
-                     options: [
-                        { text: 'It has no tail', isCorrect: true },
-                        { text: 'It has no ears' },
-                        { text: 'It has no fur' }
-                     ],
-                     scoreValue: 2
-                  },
-                  {
-                     title: "India's animal",
-                     question: 'Which animal is the national animal of India?',
-                     options: [{ text: 'elephant' }, { text: 'snake' }, { text: 'tiger', isCorrect: true }],
-                     scoreValue: 1
-                  }
-               ],
-               leaderboard: [
-                  {
-                     username: 'test_user1',
-                     score: 1
-                  },
-                  {
-                     username: 'test_admin',
-                     score: 3
-                  },
-                  {
-                     username: 'test_user2',
-                     score: 2
-                  }
-               ]
-            }
-         ]
-      };
-   }
 }
-

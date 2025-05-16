@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { Path } from '@prfq-shared/models';
 import { AuthService, GameService, RouterService } from '@prfq-shared/services';
@@ -18,8 +17,8 @@ export class ProfileComponent {
    private readonly gameService = inject(GameService);
    private readonly routerService = inject(RouterService);
 
-   public readonly user = toSignal(this.authService.loggedInUser$, { initialValue: null });
-   public readonly participatedGames = toSignal(this.gameService.getParticipatedGames(), { initialValue: [] });
+   public readonly user = this.authService.user;
+   public readonly participatedGames = this.gameService.getParticipatedGames();
 
    public toGame(gameId: string): void {
       this.routerService.openGameOverview(gameId);

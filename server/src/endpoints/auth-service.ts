@@ -7,8 +7,8 @@ export class AuthService {
 
    public login(req: Request, res: Response, next: NextFunction): void {
       console.log('login');
-      this.passport.authenticate('local', (error: string | null, user: typeof User) => {
-         console.log('auth', user);
+      this.passport.authenticate('local', (error: string | null, user: typeof User, info: any) => {
+         console.log('auth', error, user, info);
          if (error) {
             console.log(error);
             res.status(500).send(error);
@@ -21,7 +21,7 @@ export class AuthService {
                      console.log(err);
                      res.status(500).send('Internal server error.');
                   } else {
-                     res.status(200).send(user);
+                     res.status(200).send(this.mapServerUserToClientUser(user));
                   }
                });
             }
@@ -30,16 +30,27 @@ export class AuthService {
    }
 
    public register(req: Request, res: Response): void {
-      const { name, password } = req.body;
-      const user = new User({ username: name, password, isAdmin: false });
-      user
-         .save()
-         .then(data => {
-            res.status(200).send(data);
-         })
-         .catch(error => {
-            res.status(500).send(error);
-         });
+      if (req.isAuthenticated()) {
+         res.status(500).send('User already logged in.');
+         return;
+      }
+
+      const { username, password } = req.body;
+      User.findOne({ username }).then(user => {
+         if (user) {
+            res.status(500).send('A user with this name already exists.');
+         } else {
+            const newUser = new User({ username, password, isAdmin: false });
+            newUser
+               .save()
+               .then(user => {
+                  res.status(200).send(this.mapServerUserToClientUser(user));
+               })
+               .catch(error => {
+                  res.status(500).send(error);
+               });
+         }
+      });
    }
 
    public logout(req: Request, res: Response): void {
@@ -50,11 +61,26 @@ export class AuthService {
                console.log(error);
                res.status(500).send('Internal server error.');
             }
-            res.status(200).send('Successfully logged out.');
+            res.status(200).send(null);
          });
       } else {
          res.status(500).send('User is not logged in.');
       }
    }
-}
 
+   public auth(req: Request, res: Response): void {
+      console.log('get user');
+      if (!req.isAuthenticated()) {
+         res.status(200).send(null);
+         return;
+      }
+
+      res.status(200).send(this.mapServerUserToClientUser(req.user));
+   }
+
+   private mapServerUserToClientUser(serverUser: any): any {
+      const { username, _id: id, isAdmin } = serverUser;
+      const user = { username, id, isAdmin };
+      return user;
+   }
+}

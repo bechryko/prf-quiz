@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -18,5 +17,5 @@ export class GameTileComponent {
 
    public readonly game = input.required<Game>();
    public readonly navigateToGameOverview = output();
-   public readonly user = toSignal(this.authService.loggedInUser$, { initialValue: null });
+   public readonly user = this.authService.user;
 }

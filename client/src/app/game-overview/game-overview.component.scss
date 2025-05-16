@@ -1,6 +1,11 @@
 :host {
    display: block;
+   position: relative;
    padding: 2rem;
+}
+
+button.back {
+   position: absolute;
 }
 
 h1 {
@@ -128,4 +133,3 @@ h1 {
       font-style: italic;
    }
 }
-

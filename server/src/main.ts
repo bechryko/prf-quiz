@@ -6,6 +6,7 @@ import expressSession from 'express-session';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { configureEndpoints } from './endpoints';
+import { provideMockData } from './mock-data';
 import { configurePassport } from './passport/passport';
 
 const app = express();
@@ -16,6 +17,7 @@ mongoose
    .connect(dbUrl)
    .then(result => {
       console.log('MongoDB state:', result.ConnectionStates[result.connection.readyState]);
+      provideMockData();
    })
    .catch(console.error);
 
@@ -52,4 +54,3 @@ app.use('/app', configureEndpoints(passport, express.Router()));
 app.listen(port, () => {
    console.log('Server is listening on port ' + port.toString());
 });
-

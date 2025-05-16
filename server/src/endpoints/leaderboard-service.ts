@@ -3,7 +3,14 @@ import { LeaderboardEntry } from '../models';
 
 export class LeaderboardService {
    public addLeaderboardEntry(req: Request, res: Response): void {
-      const { quizId, username, score } = req.body;
+      const { quizId, score } = req.body;
+      const username: string | undefined = (req.user as any)?.username;
+      console.log(req.user, username);
+      if (!username) {
+         res.status(500).send('User not logged in.');
+         return;
+      }
+
       this.getExistingLeaderboardEntry(quizId, username).then(entry => {
          if (entry === null) {
             const newEntry = new LeaderboardEntry({ quizId, username, score });

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -17,7 +16,7 @@ export class ProfileTileComponent {
    private readonly authService = inject(AuthService);
    private readonly routerService = inject(RouterService);
 
-   public readonly user = toSignal(this.authService.loggedInUser$, { initialValue: null });
+   public readonly user = this.authService.user;
 
    @HostListener('click')
    public onClick(): void {
