@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { PassportStatic } from 'passport';
 import { User } from '../models';
-import { Logger } from '../utility';
+import { Endpoint, Logger } from '../utility';
 
 export class AuthService {
    constructor(private readonly passport: PassportStatic) {
       Logger.info('AuthService constructed');
    }
 
+   @Endpoint({ method: 'post', path: '/login' })
    public login(req: Request, res: Response, next: NextFunction): void {
       Logger.info('Login started');
       this.passport.authenticate('local', (error: string | null, user: typeof User, info: any) => {
@@ -35,6 +36,7 @@ export class AuthService {
       })(req, res, next);
    }
 
+   @Endpoint({ method: 'post', path: '/register' })
    public register(req: Request, res: Response): void {
       Logger.info('Register started');
       if (req.isAuthenticated()) {
@@ -66,6 +68,7 @@ export class AuthService {
       });
    }
 
+   @Endpoint({ method: 'post', path: '/logout' })
    public logout(req: Request, res: Response): void {
       Logger.info('Logout started');
       if (req.isAuthenticated()) {
@@ -85,6 +88,7 @@ export class AuthService {
       }
    }
 
+   @Endpoint({ method: 'get', path: '/auth' })
    public auth(req: Request, res: Response): void {
       Logger.info('Getting authenticated user');
       if (!req.isAuthenticated()) {

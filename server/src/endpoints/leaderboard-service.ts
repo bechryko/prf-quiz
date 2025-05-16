@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { LeaderboardEntry } from '../models';
-import { Logger } from '../utility';
+import { Endpoint, Logger } from '../utility';
 
 export class LeaderboardService {
    constructor() {
       Logger.info('LeaderboardService constructed');
    }
 
+   @Endpoint({ method: 'post', path: '/quiz/leaderboard' })
    public addLeaderboardEntry(req: Request, res: Response): void {
       Logger.info('Adding leaderboard entry');
       const { quizId, score } = req.body;

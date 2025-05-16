@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Game } from '../models';
-import { Logger } from '../utility';
+import { Endpoint, Logger } from '../utility';
 import { QuizService } from './quiz-service';
 
 export class GameService {
@@ -8,8 +8,9 @@ export class GameService {
       Logger.info('GameService constructed');
    }
 
-   public getAllGames(_: Request, res: Response): void {
-      Logger.info('Fetch all games');
+   @Endpoint({ method: 'get', path: '/game/list' })
+   public listGames(_: Request, res: Response): void {
+      Logger.info('List all games');
       const gamesQuery = Game.find();
       gamesQuery
          .then(data => {
@@ -31,6 +32,7 @@ export class GameService {
          });
    }
 
+   @Endpoint({ method: 'post', path: '/game/create' })
    public createGame(req: Request, res: Response): void {
       Logger.info('Game creation');
       const user = req.user as any;

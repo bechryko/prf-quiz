@@ -12,6 +12,7 @@
     "isolatedModules": false,
     "esModuleInterop": true,
     "importHelpers": true,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "experimentalDecorators": true
   }
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Game, Quiz } from '../models';
-import { Logger } from '../utility';
+import { Endpoint, Logger } from '../utility';
 import { LeaderboardService } from './leaderboard-service';
 
 export class QuizService {
@@ -8,6 +8,7 @@ export class QuizService {
       Logger.info('QuizService constructed');
    }
 
+   @Endpoint({ method: 'post', path: '/quiz/create' })
    public createQuiz(req: Request, res: Response): void {
       Logger.info('Quiz creation');
       if (!req.user) {
@@ -47,6 +48,7 @@ export class QuizService {
          });
    }
 
+   @Endpoint({ method: 'delete', path: '/quiz/delete/:quizId' })
    public deleteQuiz(req: Request, res: Response): void {
       if (!req.user) {
          const message = 'User not logged in';
