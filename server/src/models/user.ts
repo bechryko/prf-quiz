@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { Logger } from '../utility';
 
 const SALT_FACTOR = 10;
 
@@ -17,6 +18,7 @@ const UserSchema: Schema<IUser> = new mongoose.Schema({
 });
 
 UserSchema.pre<IUser>('save', function (next) {
+   Logger.info('Encrypting user password');
    const user = this;
 
    bcrypt.genSalt(SALT_FACTOR, (error, salt) => {
@@ -37,9 +39,11 @@ UserSchema.methods['comparePassword'] = function (
    candidatePassword: string,
    callback: (error: Error | null, isMatch: boolean) => void
 ): void {
+   Logger.info('Comparing user password');
    const user = this;
    bcrypt.compare(candidatePassword, user['password'], (error, isMatch) => {
       if (error) {
+         Logger.error('Not matching passwords', error);
          callback(error, false);
       }
       callback(null, isMatch);
@@ -47,4 +51,3 @@ UserSchema.methods['comparePassword'] = function (
 };
 
 export const User: Model<IUser> = mongoose.model<IUser>('user', UserSchema);
-

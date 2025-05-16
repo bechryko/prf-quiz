@@ -4,4 +4,3 @@ export { LeaderboardEntry } from './leaderboard-entry';
 export { Quiz } from './quiz';
 export { User } from './user';
 //@endindex
-
