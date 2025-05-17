@@ -11,4 +11,3 @@ export const selectedGameResolver: ResolveFn<Game> = (route, _) => {
 
    return gameService.getGame(gameId!) as Observable<Game>;
 };
-

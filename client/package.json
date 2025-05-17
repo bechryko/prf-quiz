@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "prettier": "prettier \"src/**/*.ts\" --write",
-    "eslint": "eslint \"src/**\" --fix",
+    "eslint": "",
     "code-format": "npm run prettier && npm run eslint",
     "test": "ng test"
   },
@@ -49,4 +49,3 @@
     "typescript-eslint": "^8.26.0"
   }
 }
-

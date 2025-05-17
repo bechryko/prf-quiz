@@ -28,4 +28,3 @@ export class GameUtils {
       return this.getComputedLeaderboardEntries(game).length === 0;
    }
 }
-

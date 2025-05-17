@@ -67,4 +67,3 @@ export class QuizComponent {
       return this.selectedQuiz().questions.reduce((score, question) => score + question.scoreValue, 0);
    }
 }
-

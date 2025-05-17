@@ -8,4 +8,3 @@ export interface Quiz {
    questions: QuizQuestion[];
    leaderboard: LeaderboardEntry[];
 }
-

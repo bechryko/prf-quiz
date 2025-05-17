@@ -75,4 +75,3 @@ export class QuizCreationComponent {
       return this.route.snapshot.paramMap.get('gameId')!;
    }
 }
-

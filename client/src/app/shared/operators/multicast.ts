@@ -8,4 +8,3 @@ export function multicast<T>(options: ShareConfig<T> = {}): MonoTypeOperatorFunc
       resetOnRefCountZero: options.resetOnRefCountZero ?? true
    });
 }
-
