@@ -2,6 +2,13 @@
 
 Kötelező program az SZTE Programtervező Informatikus MSc szak Programrendszerek fejlesztése tárgyához.
 
+## Projekt elindítása
+
+1. A projekt mappájában add ki az `npm run install` parancsot, ami telepíti a frontend és backend dependency-ket!
+2. A projekt mappájában add ki az `npm run start-frontend` parancsot!
+3. Hogyha nem létezik a Docker container, akkor a backend mappájában (`server`) add ki az `npm run docker` parancsot!
+4. A projekt mappájában add ki az `npm run start-backend` parancsot, vagy a backend mappájában az `npm run start` parancsot!
+
 ## Feladatkiírás
 
 Szerepkörök: admin és játékos.
