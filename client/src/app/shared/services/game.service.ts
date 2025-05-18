@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GameUtils, HttpRequestUtils } from '@prfq-shared/utils';
-import { catchError, map, Observable, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, startWith, Subject, switchMap, tap, throwError } from 'rxjs';
 import { Game, Quiz } from '../models';
 import { mapVoid, multicast } from '../operators';
 import { AuthService } from './auth.service';
@@ -99,6 +99,12 @@ export class GameService {
          })
          .pipe(
             tap(() => this.fetchGames()),
+            catchError(error => {
+               if (error.status === 500 && error.error === 'User not logged in') {
+                  return [undefined];
+               }
+               return throwError(() => new Error(error));
+            }),
             mapVoid()
          );
    }
